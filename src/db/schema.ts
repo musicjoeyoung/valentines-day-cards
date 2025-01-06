@@ -1,12 +1,12 @@
-import { jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-export type NewUser = typeof users.$inferInsert;
+export type NewCard = typeof cards.$inferInsert;
 
-export const users = pgTable("users", {
+export const cards = pgTable("cards", {
   id: serial("id").primaryKey(),
-  name: text("name"),
-  email: text("email"),
-  settings: jsonb("settings"),
+  to: text("to"),
+  from: text("from"),
+  message: text("message"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
