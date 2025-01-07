@@ -8,7 +8,7 @@ type Bindings = {
     AI: any;
 };
 
-type MessageType = 'custom' | 'improved' | 'sweet' | 'funny';
+type MessageType = 'custom' | 'improved' | 'sweet' | 'funny' | 'limerick';
 
 interface CardRequest {
     to: string;
@@ -16,6 +16,8 @@ interface CardRequest {
     message?: string;
     messageType: MessageType;
 }
+
+const limerick = "Rhythm: Limericks have an anapestic rhythm, which means that two unstressed syllables are followed by a stressed syllable.The first, second, and fifth lines each have three anapests, while the third and fourth lines have two. Syllables: A good guideline is to have 7–10 syllables in the first, second, and fifth lines, and 5–7 syllables in the third and fourth lines. Structure: Limericks are usually comical, nonsensical, and lewd.The first line usually introduces a person or place, the middle sets up a silly story, and the end usually has a punchline or surprise twist."
 
 const PROMPTS = {
     improved: (message: string) => ({
@@ -29,6 +31,15 @@ const PROMPTS = {
     funny: {
         system: "You are a direct response AI. Only output the message with no additional text.",
         user: "Create a funny Valentine's Day message"
+    },
+    limerick: {
+        system: "You are a direct response AI. Output only the requested content with no introductions, explanations, comments, or prefatory text. Start the response immediately with the first word of the limerick. Any output that includes additional text outside the limerick format is a critical failure. Follow instructions exactly.",
+        user: `Write a Valentine's Day message in the form of a limerick (reference this definition for form: ${limerick}). Your response must:
+
+            1. Begin with the first word of the limerick.
+            2. Contain no introductions, explanations, or comments.
+            3. Only include the limerick and nothing else.
+            4. Adhere to the system prompt requirements.`
     }
 };
 
@@ -73,7 +84,13 @@ message.post("/", async (c) => {
                 return c.json({ error: 'Original message required for improvement' }, 400);
             }
 
-            const aiResponse = await c.env.AI.run('@cf/meta/llama-2-7b-chat-fp16', {
+            /* The chat-fp16 AI model continued to return introductory text, despite my explicit prompts. So I switched from @cf/meta/llama-2-7b-chat-fp16 to @cf/meta/llama-3.1-8b-instruct-fp8 and now I'm getting the response format I dictated. 
+
+            I'm keeping the lengthy prompts for "limerick" above as it works currently and I don't want to change it
+            */
+
+
+            const aiResponse = await c.env.AI.run('@cf/meta/llama-3.1-8b-instruct-fp8', {
                 messages: [
                     { role: 'system', content: prompt.system },
                     { role: 'user', content: prompt.user }

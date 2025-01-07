@@ -1,4 +1,7 @@
-## 🪿 HONC
+# Valentine's Day Cards
+
+This project gives the user the ability to create a Valentine's Day Card and share it with a message that is either original, orginally but improved with AI, or an AI-generated message that is either funny or sweet. 
+## 🪿 HONC (boilerplate README content below)
 
 This is a project created with the `create-honc-app` template.
 

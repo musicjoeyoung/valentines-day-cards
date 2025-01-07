@@ -3,7 +3,7 @@ import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { pgEnum as drizzlePgEnum } from "drizzle-orm/pg-core";
 
 export type NewCard = typeof cards.$inferInsert;
-export const messageTypeEnum = drizzlePgEnum('message_type', ['custom', 'improved', 'sweet', 'funny']);
+export const messageTypeEnum = drizzlePgEnum('message_type', ['custom', 'improved', 'sweet', 'funny', 'limerick']);
 export const cards = pgTable("cards", {
   id: serial("id").primaryKey(),
   to: text("to"),
