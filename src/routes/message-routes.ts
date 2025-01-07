@@ -86,6 +86,8 @@ message.post("/", async (c) => {
             finalMessage = aiResponse.response.trim();
         } else if (!message) {
             return c.json({ error: 'Message required for custom type' }, 400);
+        } else {
+            return c.json({ error: 'Invalid message type' }, 400);
         }
 
         const sql = neon(c.env.DATABASE_URL);
