@@ -1,3 +1,4 @@
+import { Filter } from "profanity-check"
 import { Hono } from "hono";
 import { cards } from "../db/schema";
 import { drizzle } from "drizzle-orm/neon-http";
@@ -16,6 +17,9 @@ interface CardRequest {
     message?: string;
     messageType: MessageType;
 }
+
+const defaultFilter = new Filter()
+
 
 const limerick = "Rhythm: Limericks have an anapestic rhythm, which means that two unstressed syllables are followed by a stressed syllable.The first, second, and fifth lines each have three anapests, while the third and fourth lines have two. Syllables: A good guideline is to have 7–10 syllables in the first, second, and fifth lines, and 5–7 syllables in the third and fourth lines. Structure: Limericks are usually comical, nonsensical, and lewd.The first line usually introduces a person or place, the middle sets up a silly story, and the end usually has a punchline or surprise twist."
 
@@ -70,6 +74,10 @@ message.post("/", async (c) => {
 
         if (!to || !from || !messageType) {
             return c.json({ error: 'Missing required fields' }, 400);
+        }
+
+        if (defaultFilter.isProfane(to) || defaultFilter.isProfane(from) || (message && defaultFilter.isProfane(message))) {
+            return c.json({ error: "Profanity detected in input" }, 400);
         }
 
         let finalMessage = message;

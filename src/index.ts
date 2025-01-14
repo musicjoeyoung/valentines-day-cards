@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import { instrument } from "@fiberplane/hono-otel";
 import messageRoutes from "./routes/message-routes";
 
@@ -13,6 +14,7 @@ app.get("/", (c) => {
   return c.text("Welcome to the Valentines Day Cards API!");
 });
 
+app.use(cors());
 app.route("/api/cards", messageRoutes);
 
 export default instrument(app);
