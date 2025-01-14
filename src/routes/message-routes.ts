@@ -76,6 +76,7 @@ message.post("/", async (c) => {
             return c.json({ error: 'Missing required fields' }, 400);
         }
 
+        /* Will have to revist this, but right now the profanity checker works. HOWEVER, if I type the word "assemble", for example, the checker throws the error because "ass" is part of that word. ?!?!*/
         if (defaultFilter.isProfane(to) || defaultFilter.isProfane(from) || (message && defaultFilter.isProfane(message))) {
             return c.json({ error: "Profanity detected in input" }, 400);
         }
