@@ -84,7 +84,7 @@ message.post("/", async (c) => {
             return c.json({ error: 'Missing required fields' }, 400);
         }
 
-        /* Will have to revist this, but right now the profanity checker works. HOWEVER, if I type the word "assemble", for example, the checker throws the error because "ass" is part of that word. ?!?!*/
+        /* Will have to revisit this, but right now the profanity checker works. HOWEVER, if I type the word "assemble", for example, the checker throws the error because "ass" is part of that word. ?!?!*/
         if (defaultFilter.isProfane(to) || defaultFilter.isProfane(from) || (message && defaultFilter.isProfane(message))) {
             return c.json({ error: "Profanity detected in input" }, 400);
         }
@@ -120,8 +120,6 @@ message.post("/", async (c) => {
             finalMessage = aiResponse.response.trim();
         } else if (!message) {
             return c.json({ error: 'Message required for custom type' }, 400);
-        } else {
-            return c.json({ error: 'Invalid message type' }, 400);
         }
 
         const sql = neon(c.env.DATABASE_URL);
