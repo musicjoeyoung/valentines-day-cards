@@ -18,6 +18,14 @@ interface CardRequest {
     messageType: MessageType;
 }
 
+interface EmailRequest {
+    to: string;
+    from: string;
+    email: string;
+    message: string;
+    messageType: MessageType;
+}
+
 const defaultFilter = new Filter()
 
 
@@ -145,5 +153,34 @@ message.post("/", async (c) => {
     }
 });
 
+message.post("/send-email", async (c) => {
+    try {
+        const body = await c.req.json();
+        const { to, from, email, message, messageType } = body as EmailRequest;
+
+        if (!to || !from || !email || !message) {
+            return c.json({ error: 'Missing required fields' }, 400);
+        }
+
+        if (defaultFilter.isProfane(to) || defaultFilter.isProfane(from)) {
+            return c.json({ error: "Profanity detected in input" }, 400);
+        }
+
+        //integrate email provider? How?
+        console.log('Sending email to:', email);
+        console.log('Card details:', { to, from, message, messageType });
+
+        return c.json({
+            success: true,
+            message: 'Email sent successfully'
+        });
+    } catch (error) {
+        console.error('Error sending email:', error);
+        return c.json({
+            success: false,
+            error: error instanceof Error ? error.message : 'Failed to send email'
+        }, 500);
+    }
+});
 
 export default message;
