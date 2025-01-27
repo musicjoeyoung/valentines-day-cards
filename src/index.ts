@@ -6,6 +6,7 @@ import messageRoutes from "./routes/message-routes";
 type Bindings = {
   DATABASE_URL: string;
   AI: Ai;
+  RESEND_API_KEY: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();

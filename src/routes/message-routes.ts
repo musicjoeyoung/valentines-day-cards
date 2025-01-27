@@ -3,10 +3,12 @@ import { Hono } from "hono";
 import { cards } from "../db/schema";
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
+import { Resend } from 'resend';
 
 type Bindings = {
     DATABASE_URL: string;
     AI: any;
+    RESEND_API_KEY: string;
 };
 
 type MessageType = 'custom' | 'improved' | 'sweet' | 'funny' | 'limerick';
@@ -27,7 +29,6 @@ interface EmailRequest {
 }
 
 const defaultFilter = new Filter()
-
 
 const limerick = "Rhythm: Limericks have an anapestic rhythm, which means that two unstressed syllables are followed by a stressed syllable.The first, second, and fifth lines each have three anapests, while the third and fourth lines have two. Syllables: A good guideline is to have 7–10 syllables in the first, second, and fifth lines, and 5–7 syllables in the third and fourth lines. Structure: Limericks are usually comical, nonsensical, and lewd.The first line usually introduces a person or place, the middle sets up a silly story, and the end usually has a punchline or surprise twist."
 
@@ -153,10 +154,16 @@ message.post("/", async (c) => {
 
 message.post("/send-email", async (c) => {
     try {
-        const body = await c.req.json();
-        const { to, from, email, message, messageType } = body as EmailRequest;
 
-        if (!to || !from || !email || !message) {
+        if (!c.env.RESEND_API_KEY) {
+            return c.json({ error: 'Resend API key not found in environment' }, 500);
+        }
+
+        const resend = new Resend(c.env.RESEND_API_KEY);
+        const body = await c.req.json();
+        const { to, from, email, message: messageContent, messageType } = body as EmailRequest;
+
+        if (!to || !from || !email || !messageContent) {
             return c.json({ error: 'Missing required fields' }, 400);
         }
 
@@ -164,19 +171,47 @@ message.post("/send-email", async (c) => {
             return c.json({ error: "Profanity detected in input" }, 400);
         }
 
-        //integrate email provider? How?
-        console.log('Sending email to:', email);
-        console.log('Card details:', { to, from, message, messageType });
+        try {
+            console.log("Attempting to send email to:", email);
+            const data = await resend.emails.send({
+                from: 'Valentine Cards <onboarding@resend.dev>',
+                to: email,
+                subject: `Valentine's Day Card from ${from}`,
+                html: `
+                    <h1>You've received a Valentine's Day Card! 💝</h1>
+                    <p>To: ${to}</p>
+                    <p>From: ${from}</p>
+                    <p>${messageContent}</p>
+                    <p>Card Type: ${messageType}</p>
+                `
+            });
+            console.log("Email sent successfully:", data);
 
-        return c.json({
-            success: true,
-            message: 'Email sent successfully'
-        });
+            return c.json({
+                success: true,
+                message: 'Email sent successfully',
+                data
+            });
+        } catch (emailError) {
+            console.error('Error sending email through Resend:', {
+                error: emailError,
+                message: emailError instanceof Error ? emailError.message : 'Unknown error',
+                stack: emailError instanceof Error ? emailError.stack : undefined
+            });
+            return c.json({
+                success: false,
+                error: emailError instanceof Error ? emailError.message : 'Failed to send email'
+            }, 500);
+        }
     } catch (error) {
-        console.error('Error sending email:', error);
+        console.error('Error processing request:', {
+            error,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined
+        });
         return c.json({
             success: false,
-            error: error instanceof Error ? error.message : 'Failed to send email'
+            error: error instanceof Error ? error.message : 'Failed to process request'
         }, 500);
     }
 });

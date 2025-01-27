@@ -16,7 +16,8 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.36.4",
     "hono": "^4.6.7",
-    "profanity-check": "^0.0.3"
+    "profanity-check": "^0.0.3",
+    "resend": "^4.1.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241205.0",
