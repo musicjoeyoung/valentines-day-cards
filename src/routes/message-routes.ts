@@ -121,6 +121,8 @@ message.post("/", async (c) => {
             finalMessage = aiResponse.response.trim();
         } else if (!message) {
             return c.json({ error: 'Message required for custom type' }, 400);
+        } else if (message.length > 300) {
+            return c.json({ error: 'Custom messages cannot exceed 300 characters' }, 400);
         }
 
         const sql = neon(c.env.DATABASE_URL);
