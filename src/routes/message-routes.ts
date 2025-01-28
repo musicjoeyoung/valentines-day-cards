@@ -30,6 +30,29 @@ interface EmailRequest {
 
 const defaultFilter = new Filter()
 
+// Custom profanity checker that uses a simple regex-based approach
+function isProfane(text: string): boolean {
+    // First check if the default filter finds any exact matches
+    const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+    
+    // Only flag a word as profane if it exactly matches a profane word
+    // This prevents flagging words like "class" or "assembly"
+    return words.some(word => {
+        // Skip common false positives
+        const safeWords = new Set([
+            'class', 'bass', 'brass', 'grass', 'mass', 'pass', 'assemble', 'assembly', 'crass',
+            'assignment', 'field', 'assist', 'assign', 'assume', 'assassin', 'associate', 'association'
+        ]);
+        
+        // Check if the word itself or any common variations are in the safe list
+        if (safeWords.has(word) || Array.from(safeWords).some(safe => word.startsWith(safe))) {
+            return false;
+        }
+        
+        return defaultFilter.isProfane(word);
+    });
+}
+
 const limerick = "Rhythm: Limericks have an anapestic rhythm, which means that two unstressed syllables are followed by a stressed syllable.The first, second, and fifth lines each have three anapests, while the third and fourth lines have two. Syllables: A good guideline is to have 7–10 syllables in the first, second, and fifth lines, and 5–7 syllables in the third and fourth lines. Structure: Limericks are usually comical, nonsensical, and lewd.The first line usually introduces a person or place, the middle sets up a silly story, and the end usually has a punchline or surprise twist."
 
 const PROMPTS = {
@@ -85,8 +108,7 @@ message.post("/", async (c) => {
             return c.json({ error: 'Missing required fields' }, 400);
         }
 
-        /* Will have to revisit this, but right now the profanity checker works. HOWEVER, if I type the word "assemble", for example, the checker throws the error because "ass" is part of that word. ?!?!*/
-        if (defaultFilter.isProfane(to) || defaultFilter.isProfane(from) || (message && defaultFilter.isProfane(message))) {
+        if (isProfane(to) || isProfane(from) || (message && isProfane(message))) {
             return c.json({ error: "Profanity detected in input" }, 400);
         }
 
@@ -169,7 +191,7 @@ message.post("/send-email", async (c) => {
             return c.json({ error: 'Missing required fields' }, 400);
         }
 
-        if (defaultFilter.isProfane(to) || defaultFilter.isProfane(from)) {
+        if (isProfane(to) || isProfane(from)) {
             return c.json({ error: "Profanity detected in input" }, 400);
         }
 
