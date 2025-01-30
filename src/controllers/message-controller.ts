@@ -1,11 +1,11 @@
 import { Context } from "hono";
+import { MessageType } from "../types/types";
+import { PROMPTS } from "../utils/constants";
+import { Resend } from 'resend';
 import { cards } from "../db/schema";
 import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
 import { isProfane } from "../utils/profanity-checker";
-import { PROMPTS } from "../utils/constants";
-import { MessageType } from "../types/types";
-import { Resend } from 'resend';
+import { neon } from "@neondatabase/serverless";
 
 interface CardRequest {
     to: string;

@@ -21,5 +21,9 @@ export const PROMPTS = {
             2. Contain no introductions, explanations, or comments.
             3. Only include the limerick and nothing else.
             4. Adhere to the system prompt requirements.`
+    },
+    flavorflav: {
+        system: "You are a direct response AI. Only output the message with no additional text.",
+        user: "Create a Valentine's Day message in the style of Flavor Flav. Yeeeeah booooy!"
     }
 };
