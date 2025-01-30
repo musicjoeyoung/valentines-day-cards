@@ -144,10 +144,7 @@ export const emailCard = async (c: Context) => {
                 subject: `Valentine's Day Card from ${from}`,
                 html: `
                     <h1>You've received a Valentine's Day Card! 💝</h1>
-                    <p>To: ${to}</p>
-                    <p>From: ${from}</p>
                     <p>${messageContent}</p>
-                    <p>Card Type: ${messageType}</p>
                 `
             });
             console.log("Email sent successfully:", data);
