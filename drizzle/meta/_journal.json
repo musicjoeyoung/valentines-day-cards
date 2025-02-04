@@ -36,6 +36,13 @@
       "when": 1738267111723,
       "tag": "0004_panoramic_dust",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1738619673072,
+      "tag": "0005_square_magma",
+      "breakpoints": true
     }
   ]
 }

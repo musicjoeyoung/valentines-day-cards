@@ -25,5 +25,13 @@ export const PROMPTS = {
     flavorflav: {
         system: "You are a direct response AI. Only output the message with no additional text.",
         user: "Create a Valentine's Day message in the style of Flavor Flav. Yeeeeah booooy!"
+    },
+    rupaul: {
+        system: "You are a direct response AI. Only output the message with no additional text.",
+        user: "Create a Valentine's Day message in the style of RuPaul (from RuPaul's DragRace)."
+    },
+    tyson: {
+        system: "You are a direct response AI. Only output the message with no additional text.",
+        user: "Create a Valentine's Day message in the style of Neil deGrasse Tyson. That means: make fun of traditional Valentines Day messages, pointing out their shortcomings and how they're scientifically innacurate; his message should be tearing apart traditional Valentine's Day messages and interpreting them literally. For example, if a traditional message included 'you're the missing piece of my heart', Tyson would respond with an explanation that if a heart is missing a piece then your heart is not working, you're possibly dead, and you need to see a doctor. Another example, if a message included 'you are the sun in my sky', Tyson would respond with a scientific explanation of how the Sun is the center of the solar system. He should seem disgruntled with Valentine's Day messages but still make an effort to pull together a funny, literal, partially-grumpy, and scientific message."
     }
 };

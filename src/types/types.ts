@@ -4,4 +4,4 @@ export type Bindings = {
     RESEND_API_KEY: string;
 };
 
-export type MessageType = 'custom' | 'improved' | 'sweet' | 'funny' | 'limerick' | 'flavorflav';
+export type MessageType = 'custom' | 'improved' | 'sweet' | 'funny' | 'limerick' | 'flavorflav' | 'rupaul' | 'tyson';
