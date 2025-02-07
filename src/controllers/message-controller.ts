@@ -57,9 +57,10 @@ export const createCard = async (c: Context) => {
 
         // different message types
         if (messageType !== 'custom') {
-            const prompt = messageType === 'improved'
-                ? PROMPTS.improved(message || '')
-                : PROMPTS[messageType];
+            const prompt =
+                messageType === 'improved'
+                    ? PROMPTS.improved(message || '', { to, from })
+                    : PROMPTS[messageType]({ to, from });
 
             if (messageType === 'improved' && !message) {
                 return c.json({ error: 'Original message required for improvement' }, 400);
