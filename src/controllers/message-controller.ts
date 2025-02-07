@@ -135,7 +135,7 @@ export const emailCard = async (c: Context) => {
         if (isProfane(to) || isProfane(from)) {
             return c.json({ error: "Profanity detected in input" }, 400);
         }
-
+        //test
         try {
             console.log("Attempting to send email to:", email);
             const data = await resend.emails.send({
