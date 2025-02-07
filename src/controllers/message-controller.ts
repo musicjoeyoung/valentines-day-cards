@@ -139,7 +139,7 @@ export const emailCard = async (c: Context) => {
         try {
             console.log("Attempting to send email to:", email);
             const data = await resend.emails.send({
-                from: 'Valentine Cards <onboarding@resend.dev>',
+                from: 'josephmyoung@josephmyoung.com',
                 to: email,
                 subject: `Valentine's Day Card from ${from}`,
                 html: `
